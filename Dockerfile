@@ -2,25 +2,27 @@
 FROM golang:1.22 AS builder
 
 WORKDIR /workspace
+
 # Copy the Go Modules manifests
 COPY go.mod go.mod
 COPY go.sum go.sum
-# cache deps before building and copying source so that we don't need to re-download as much
-# and so that source changes don't invalidate our downloaded layer
-RUN go mod download
+
+# Initialize and download modules
+RUN go mod download && \
+    go mod verify
 
 # Copy the go source
 COPY . .
 
+# Install controller-gen
+RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@latest
+
 # Build with module support enabled
-RUN CGO_ENABLED=0 \
-    GOOS=linux \
-    GOARCH=amd64 \
-    go build -mod=readonly -a -o manager main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -mod=readonly -a -o manager main.go
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
-FROM gcr.io/distroless/static:nonroot
+FROM gcr.io/distroless/static:nonroot AS final
 WORKDIR /
 COPY --from=builder /workspace/manager .
 USER 65532:65532
