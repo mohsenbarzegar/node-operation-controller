@@ -1,5 +1,5 @@
 # Build the manager binary
-FROM golang:1.22 as builder
+FROM golang:1.22 AS builder
 
 WORKDIR /workspace
 # Copy the Go Modules manifests
@@ -10,10 +10,7 @@ COPY go.sum go.sum
 RUN go mod download
 
 # Copy the go source
-COPY main.go main.go
-COPY api/ api/
-COPY controllers/ controllers/
-COPY hack/ hack/
+COPY . .
 
 # Build with module support enabled
 RUN CGO_ENABLED=0 \
