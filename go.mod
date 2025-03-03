@@ -1,4 +1,4 @@
-module github.com/pfnet-research/node-operation-controller
+module github.com/mohsenbarzegar/node-operation-controller
 
 go 1.22
 
