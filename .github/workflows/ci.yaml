@@ -28,7 +28,7 @@ jobs:
         go mod download
     - name: Install controller-gen
       run: |
-        go install sigs.k8s.io/controller-tools/cmd/controller-gen@v0.13.0
+        go install sigs.k8s.io/controller-tools/cmd/controller-gen@v0.11.3
     - name: Run tests
       run: make test
 
