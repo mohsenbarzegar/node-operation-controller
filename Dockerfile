@@ -15,7 +15,7 @@ RUN go mod download && \
 COPY . .
 
 # Install controller-gen
-RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@latest
+RUN go install sigs.k8s.io/controller-tools/cmd/controller-gen@v0.13.0
 
 # Build with module support enabled
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -mod=readonly -a -o manager main.go
